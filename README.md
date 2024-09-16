@@ -16,16 +16,8 @@ Orientações para Executar o Projeto
   source venv/bin/activate  # Para Unix/macOS
   venv\Scripts\activate     # Para Windows
 
-3. Instale as Dependências
-   pip install -r requirements.txt
-
 Configuração do Banco de Dados:
 1. No shell do Python, execute os seguintes comandos para criar o banco de dados e as tabelas:
   from filmestop import db
   db.create_all()
   exit()
-
-Executando a Aplicação:
-1. No terminal, execute o comando para iniciar a aplicação:
-   flask run
-
