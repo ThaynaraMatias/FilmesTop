@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Avaliar Filme{% endblock %}
+{% block content %}
+<h2>Avaliar Filme Alugado</h2>
+<form id="form-avaliar-filme">
+    <label for="filme-id-avaliar">ID do Filme:</label>
+    <input type="number" id="filme-id-avaliar" placeholder="Digite o ID do filme alugado" required>
+    <label for="nota">Nota (0 a 5):</label>
+    <input type="number" id="nota" min="0" max="5" step="0.1" placeholder="Digite a nota" required>
+    <button type="button" onclick="avaliarFilme()">Avaliar Filme</button>
+</form>
+<div id="avaliar-filme-resultado"></div>
+<script>
+    function avaliarFilme() {
+        const filmeId = document.getElementById('filme-id-avaliar').value;
+        const nota = document.getElementById('nota').value;
+        const data = {
+            filme_id: filmeId,
+            nota: nota
+        };
+        fetch('/avaliar', {
+            method: 'POST',  // Certifique-se de que o método é POST
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            const resultado = document.getElementById('avaliar-filme-resultado');
+            if (data.error) {
+                resultado.innerHTML = `<p style="color: red;">${data.error}</p>`;
+            } else {
+                resultado.innerHTML = `<p style="color: green;">${data.message}</p>`;
+            }
+        })
+        .catch(error => console.error('Erro ao avaliar filme:', error));
+    }
+</script>
+{% endblock %}

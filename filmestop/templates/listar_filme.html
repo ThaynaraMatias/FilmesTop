@@ -1,0 +1,85 @@
+<h2>Listar Filmes por Gênero</h2>
+<a href="{{ url_for('index') }}">Início</a>
+<form id="form-listar-filmes">
+    <label for="genero">Escolha um gênero:</label>
+    <select id="genero" name="genero" required>
+        <option value=""disabled selected></option>
+        <option value="Ação e Aventura">Ação e Aventura</option>
+        <option value="Comédia Romântica">Comédia Romântica</option>
+        <option value="Drama">Drama</option>
+        <option value="Ficção Científica">Ficção Científica</option>
+        <option value="Terror">Terror</option>
+        <option value="Animação">Animação</option>
+    </select>
+    <button type="button" onclick="listarFilmes()">Listar Filmes</button>
+</form>
+<div id="filmes-resultado"></div>
+<script>
+    function listarFilmes() {
+        const genero = document.getElementById('genero').value;
+        fetch(`/filmes/${genero}`)
+            .then(response => response.json())
+            .then(data => {
+                const resultado = document.getElementById('filmes-resultado');
+                resultado.innerHTML = '<h3>Filmes Encontrados:</h3>';
+                data.forEach(filme => {
+                    resultado.innerHTML += `
+                        <p>
+                            ${filme.nome} (${filme.ano}) - Diretor: ${filme.diretor}
+                            <button type="button" onclick="obterInfoFilme('${filme.nome}')">Informações</button>
+                            <button type="button" onclick="alugarFilme(${filme.id})">Alugar Filme</button>
+                        </p>`;
+                });
+            })
+            .catch(error => console.error('Erro ao listar filmes:', error));
+    }
+
+    function obterInfoFilme(nomeFilme) {
+        fetch(`/filme/${nomeFilme}`)
+            .then(response => response.json())
+            .then(data => {
+                const resultado = document.getElementById('filmes-resultado');
+                // Limpar informações anteriores
+                const infoDiv = document.getElementById('info-filme');
+                if (infoDiv) {
+                    infoDiv.remove();
+                }
+                // Adicionar novas informações
+                const infoHtml = document.createElement('div');
+                infoHtml.id = 'info-filme';
+                if (data.erro) {
+                    infoHtml.innerHTML = `<p style="color: red;">${data.erro}</p>`;
+                } else {
+                    infoHtml.innerHTML = `<div>
+                        <h3>Informações do Filme:</h3>
+                        <p><strong>Nome:</strong> ${data.nome}</p>
+                        <p><strong>Ano:</strong> ${data.ano}</p>
+                        <p><strong>Gênero:</strong> ${data.genero}</p>
+                        <p><strong>Sinopse:</strong> ${data.sinopse}</p>
+                        <p><strong>Diretor:</strong> ${data.diretor}</p>
+                    </div>`;
+                }
+                resultado.appendChild(infoHtml);
+            })
+            .catch(error => console.error('Erro ao obter informações do filme:', error));
+    }
+
+    function alugarFilme(filmeId) {
+        fetch('/alugar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ filme_id: filmeId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => console.error('Erro ao alugar filme:', error));
+    }
+</script>

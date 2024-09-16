@@ -1,0 +1,28 @@
+<h2>Adicionar um Novo Filme</h2>
+<a href="{{ url_for('index') }}">Início</a>
+<form action="{{ url_for('adicionar_filme') }}" method="POST">
+    <label for="nome">Nome do Filme:</label>
+    <input type="text" id="nome" name="nome" required>
+    
+    <label for="ano">Ano de Lançamento:</label>
+    <input type="number" id="ano" name="ano" required>
+    
+    <label for="genero">Gênero:</label>
+    <select id="genero" name="genero" required>
+        <option value=""disabled selected></option>
+        <option value="Ação e Aventura">Ação e Aventura</option>
+        <option value="Comédia Romântica">Comédia Romântica</option>
+        <option value="Drama">Drama</option>
+        <option value="Ficção Científica">Ficção Científica</option>
+        <option value="Terror">Terror</option>
+        <option value="Animação">Animação</option>
+    </select>
+    
+    <label for="sinopse">Sinopse:</label>
+    <textarea id="sinopse" name="sinopse" required></textarea>
+    
+    <label for="diretor">Diretor:</label>
+    <input type="text" id="diretor" name="diretor" required>
+    
+    <button type="submit">Adicionar Filme</button>
+</form>

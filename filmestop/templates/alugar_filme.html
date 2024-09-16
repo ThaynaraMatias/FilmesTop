@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Alugar Filme{% endblock %}
+{% block content %}
+<h2>Alugar Filme</h2>
+<form id="form-alugar-filme">
+    <label for="filme-id">ID do Filme:</label>
+    <input type="number" id="filme-id" placeholder="Digite o ID do filme" required>
+    <button type="button" onclick="alugarFilme()">Alugar Filme</button>
+</form>
+<div id="alugar-filme-resultado"></div>
+<script>
+    function alugarFilme() {
+        const filmeId = document.getElementById('filme-id').value;
+        const data = {
+            filme_id: filmeId
+        };
+        fetch('/alugar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            const resultado = document.getElementById('alugar-filme-resultado');
+            if (data.error) {
+                resultado.innerHTML = `<p style="color: red;">${data.error}</p>`;
+            } else {
+                resultado.innerHTML = `<p style="color: green;">${data.message}</p>`;
+            }
+        })
+        .catch(error => console.error('Erro ao alugar filme:', error));
+    }
+</script>
+{% endblock %}

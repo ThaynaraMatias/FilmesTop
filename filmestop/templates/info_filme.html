@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Informações do Filme{% endblock %}
+{% block content %}
+<h2>Informações de um Filme</h2>
+<form id="form-info-filme">
+    <label for="nome-filme">Nome do Filme:</label>
+    <input type="text" id="nome-filme" placeholder="Digite o nome do filme" required>
+    <button type="button" onclick="obterInfoFilme()">Obter Informações</button>
+</form>
+<div id="info-filme-resultado"></div>
+<script>
+    function obterInfoFilme() {
+        const nomeFilme = document.getElementById('nome-filme').value;
+        fetch(`/filme/${nomeFilme}`)
+            .then(response => response.json())
+            .then(data => {
+                const resultado = document.getElementById('info-filme-resultado');
+                if (data.erro) {
+                    resultado.innerHTML = `<p style="color: red;">${data.erro}</p>`;
+                } else {
+                    resultado.innerHTML = `<h3>Informações do Filme:</h3>
+                        <p><strong>Nome:</strong> ${data.nome}</p>
+                        <p><strong>Ano:</strong> ${data.ano}</p>
+                        <p><strong>Gênero:</strong> ${data.genero}</p>
+                        <p><strong>Sinopse:</strong> ${data.sinopse}</p>
+                        <p><strong>Diretor:</strong> ${data.diretor}</p>`;
+                }
+            })
+            .catch(error => console.error('Erro ao obter informações do filme:', error));
+    }
+</script>
+{% endblock %}
